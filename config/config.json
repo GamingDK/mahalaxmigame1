@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "root",
-    "password": null,
+    "username": "new_user1",
+    "password": "GamingDB@123",
     "database": "game",
-    "host": "127.0.0.1",
+    "host": "195.35.20.165",
     "dialect": "mysql"
   },
   "test": {

@@ -1,5 +1,6 @@
 const { Chance } = require("chance");
 const chance = new Chance();
+
 const {
   AndharBharMatch,
   AndharBharMatchCard,
@@ -9,6 +10,7 @@ const {
   user,
   sequelize,
 } = require("../models");
+
 const { literal, Op } = require("sequelize");
 
 const createMatch = async (req, res) => {
@@ -66,7 +68,7 @@ const createBet = async (req, res) => {
 
     return res
       .status(200)
-      .send({ status: true, msg: "user bet successfully !!", currentMatch });
+      .send({ status: true, msg: "user bet successfully !!" });
   } catch (error) {
     console.log(error);
     return res.status(400).send({ status: false, msg: "user bet error!! " });
@@ -130,14 +132,14 @@ const createMatchCards = async (req, res) => {
       }
     }
 
-   const getWinCard =  await Cards.findOne({
-    where:{
-      id:{
-        [Op.not]: currentMatch.id
-      },
-       value: getMainCardValue.value
-    }
-   });
+    const getWinCard = await Cards.findOne({
+      where: {
+        id: {
+          [Op.not]: currentMatch.id
+        },
+        value: getMainCardValue.value
+      }
+    });
 
     let type
     if (andharArray.length == bharArray.length) {
@@ -159,7 +161,7 @@ const createMatchCards = async (req, res) => {
         bharArray.push(getWinCard);
       }
     };
-    ////////////////////
+
     let andarData = andharArray.map((aCard) => {
       return {
         andharBharMatchId: currentMatch.id,
@@ -207,4 +209,18 @@ const createMatchCards = async (req, res) => {
   }
 };
 
-module.exports = { createMatch, createBet, createMatchCards };
+const matchHistory = async (req, res) => {
+  try {
+    const getHistory = await AndharBharMatch.findAll({
+      order: [['id', 'DESC']],
+      limit:10,
+      attributes: ['id','win']
+    });
+    return res.status(200).send({ status: true, msg: " match history successfully", getHistory })
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send({ status: false, msg: "Error match history" })
+  }
+};
+
+module.exports = { createMatch, createBet, createMatchCards, matchHistory };
