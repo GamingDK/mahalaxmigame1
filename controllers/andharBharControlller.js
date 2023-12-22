@@ -21,10 +21,14 @@ const createMatch = async (req, res) => {
     if (cardCount !== 1) throw new Error("card not found");
 
     await AndharBharMatch.create({ cardId });
-
+    const mainCard = await Cards.findOne({
+      attributes:['name','img'],
+      where: { id:cardId }
+    });
+    
     return res
       .status(200)
-      .send({ status: true, msg: "match creted successfully !!" });
+      .send({ status: true, msg: "match creted successfully !!", mainCard });
   } catch (error) {
     console.log(error);
     return res
@@ -178,9 +182,9 @@ const createMatchCards = async (req, res) => {
     });
 
     let anharBaharData = [...andarData, ...baharData];
-    await AndharBharMatchCard.bulkCreate(anharBaharData);
+    // await AndharBharMatchCard.bulkCreate(anharBaharData);
 
-    query = "UPDATE users SET amount = amount + ( SELECT SUM(andharbharbettings.amount * 2) as winAmount FROM andharbharbettings WHERE andharbharbettings.andharBharMatchId = :andharBharMatchId AND andharbharbettings.type = :type AND users.id = andharbharbettings.userId GROUP BY andharbharbettings.userId) WHERE EXISTS(SELECT 1 FROM andharbharbettings WHERE andharbharbettings.andharBharMatchId = :andharBharMatchId AND andharbharbettings.type = :type AND users.id = andharbharbettings.userId);"
+    query = "UPDATE users SET amount = amount + ( SELECT SUM(andharbharbettings.amount * 1.97) as winAmount FROM andharbharbettings WHERE andharbharbettings.andharBharMatchId = :andharBharMatchId AND andharbharbettings.type = :type AND users.id = andharbharbettings.userId GROUP BY andharbharbettings.userId) WHERE EXISTS(SELECT 1 FROM andharbharbettings WHERE andharbharbettings.andharBharMatchId = :andharBharMatchId AND andharbharbettings.type = :type AND users.id = andharbharbettings.userId);"
 
     await sequelize.query(query, {
       replacements: {
@@ -198,6 +202,7 @@ const createMatchCards = async (req, res) => {
     return res.status(200).send({
       status: true,
       msg: "match creted successfully !!",
+      getWinCard,
       andharArray,
       bharArray,
     });

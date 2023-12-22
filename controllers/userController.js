@@ -13,7 +13,7 @@ const userSignIn = async (req, res) => {
 
     const token = await jwt.sign(getUser.dataValues, process.env.USERKEY)
 
-    return res.status(200).send({ status: false, msg: "user login successfully!! ", token: "Bearer" + " " + token })
+    return res.status(200).send({ status: true, msg: "user login successfully!! ", token: "Bearer" + " " + token })
   } catch (error) {
     console.log(error);
     return res.status(400).send({ status: false, msg: "user login error!!" + error.message })
