@@ -25,10 +25,9 @@ const createMatch = async (req, res) => {
       attributes:['name','img'],
       where: { id:cardId }
     });
-    
     return res
       .status(200)
-      .send({ status: true, msg: "match creted successfully !!", mainCard });
+      .send({ status: true, msg: "match creted successfully !!" , mainCard });
   } catch (error) {
     console.log(error);
     return res
