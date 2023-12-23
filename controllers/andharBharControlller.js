@@ -83,6 +83,7 @@ const createMatchCards = async (req, res) => {
 
     const cardsCount = chance.integer({ min: 1, max: 32 });
     const cardSet = new Set();
+    const winnerArray = "";
 
     const currentMatch = await AndharBharMatch.findOne({
       order: [["createdAt", "DESC"]],
@@ -149,19 +150,23 @@ const createMatchCards = async (req, res) => {
       if (andhar < bahar) {
         type = 0
         andharArray.push(getWinCard);
+        winnerArray = "Andar";
       } else {
         type = 1
         bharArray.pop()
         bharArray.push(getWinCard);
+        winnerArray = "Bahar";
       }
     } else {
       if (andhar < bahar) {
         type = 0
         andharArray.pop()
         andharArray.push(getWinCard);
+        winnerArray = "Andar";
       } else {
         type = 1
         bharArray.push(getWinCard);
+        winnerArray = "Bahar"
       }
     };
 
@@ -204,12 +209,13 @@ const createMatchCards = async (req, res) => {
       getWinCard,
       andharArray,
       bharArray,
+      winnerArray
     });
   } catch (error) {
     console.log(error);
     return res
       .status(400)
-      .send({ status: false, msg: "match create  error!! " });
+      .send({ status: false, msg: "match create  error!! ", error: error });
   }
 };
 
