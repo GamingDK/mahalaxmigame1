@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken")
 const userSignIn = async (req, res) => {
   try {
     const { userId, password } = req.body;
-    const getUser = await user.findOne({ where: { userId }, attributes: ['id', 'name', 'userId', 'password'] })
+    const getUser = await user.findOne({ where: { userId }, attributes: ['id', 'name', 'userId', 'password','amount'] })
     const checkPassword = await compare(password, getUser.password);
     if (!checkPassword) throw new Error("password is incorrect");
 
@@ -13,7 +13,7 @@ const userSignIn = async (req, res) => {
 
     const token = await jwt.sign(getUser.dataValues, process.env.USERKEY)
 
-    return res.status(200).send({ status: true, msg: "user login successfully!! ", token: "Bearer" + " " + token })
+    return res.status(200).send({ status: true, msg: "user login successfully!! ", token: "Bearer" + " " + token, user : getUser})
   } catch (error) {
     console.log(error);
     return res.status(400).send({ status: false, msg: "user login error!!" + error.message })
