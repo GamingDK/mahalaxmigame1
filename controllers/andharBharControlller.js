@@ -83,7 +83,7 @@ const createMatchCards = async (req, res) => {
 
     const cardsCount = chance.integer({ min: 1, max: 32 });
     const cardSet = new Set();
-    const winnerArray = "";
+    let winnerArray = "";
 
     const currentMatch = await AndharBharMatch.findOne({
       order: [["createdAt", "DESC"]],
