@@ -22,7 +22,7 @@ const createMatch = async (req, res) => {
 
     await AndharBharMatch.create({ cardId });
     const mainCard = await Cards.findOne({
-      attributes:['name','img'],
+      attributes:['name','img','value'],
       where: { id:cardId }
     });
     return res
