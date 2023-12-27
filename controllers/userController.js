@@ -20,6 +20,32 @@ const userSignIn = async (req, res) => {
   }
 }
 
+const userSignUp = async (req, res) => {
+  try {
+    const { mobile, email, password } = req.body;
+    
+    // Check if the user with the given mobile number already exists
+    const existingUser = await user.findOne({ where: { mobile } });
+
+    if (existingUser) {
+      return res.status(500).send({ status: false, msg: "User already registered" });
+    }
+
+    // Create a new user
+    const newUser = await user.create({
+      mobile,
+      email,
+      password,
+      // Add other necessary fields here
+    });
+
+    return res.status(200).send({ status: true, msg: "User registered successfully", data: newUser });
+  } catch (error) {
+    console.error(error);
+    return res.status(400).send({ status: false, msg: "User registration error: " + error.message });
+  }
+}
+
 const getCards = async (req, res) => {
   try {
     const cards = await Cards.findAll({ attributes: ['name', 'img', 'id'] });
