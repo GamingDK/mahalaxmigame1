@@ -22,15 +22,32 @@ const userSignIn = async (req, res) => {
 
 const userSignUp = async (req, res) => {
   try {
-    req.body.password = await hash(req.body.password, await genSalt(10));
-    await user.create(req.body);
+    const {name,  mobile, email, password } = req.body;
+    
+    // Check if the user with the given mobile number already exists
+    const existingUser = await user.findOne({ where: { mobile } });
 
-    return res
-      .status(200)
-      .send({ status: true, msg: "user signup successfully !!" });
+
+    if (existingUser) {
+      return res.status(500).send({ status: false, msg: "User already registered" });
+    }
+    const hashPass = await hash(password, await genSalt(10));
+
+    const userId = name + "@123";
+    // Create a new user
+    const newUser = await user.create({
+      name,
+      mobile,
+      email,
+      password:hashPass,
+      userId,
+      // Add other necessary fields here
+    });
+
+    return res.status(200).send({ status: true, msg: "User registered successfully", data: newUser });
   } catch (error) {
-    console.log(error);
-    return res.status(400).send({ status: false, msg: "user signup error!! " });
+    console.error(error);
+    return res.status(400).send({ status: false, msg: "User registration error: " + error.message });
   }
 }
 
