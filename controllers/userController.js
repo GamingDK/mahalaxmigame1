@@ -22,7 +22,7 @@ const userSignIn = async (req, res) => {
 
 const userSignUp = async (req, res) => {
   try {
-    const { mobile, email, password } = req.body;
+    const {name,  mobile, email, password } = req.body;
     
     // Check if the user with the given mobile number already exists
     const existingUser = await user.findOne({ where: { mobile } });
@@ -31,11 +31,14 @@ const userSignUp = async (req, res) => {
       return res.status(500).send({ status: false, msg: "User already registered" });
     }
 
+    const userId = name + "@123";
     // Create a new user
     const newUser = await user.create({
+      name,
       mobile,
       email,
       password,
+      userId,
       // Add other necessary fields here
     });
 
@@ -61,5 +64,6 @@ const getCards = async (req, res) => {
 
 module.exports = {
   userSignIn,
+  userSignUp,
   getCards,
 };
