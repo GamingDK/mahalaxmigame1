@@ -23,8 +23,8 @@ router.post("/signUp", userSignUp);
 //main routes
 router.post(
   "/signin",
-  signInValidationRules,
-  handleValidationErrors,
+  // signInValidationRules,
+  // handleValidationErrors,
   userSignIn
 );
 
