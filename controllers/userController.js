@@ -32,8 +32,9 @@ const userSignUp = async (req, res) => {
       return res.status(500).send({ status: false, msg: "User already registered" });
     }
     const hashPass = await hash(password, await genSalt(10));
+    const num = Math.floor(Math.random() * 900) + 100;
 
-    const userId = name + "@123";
+    const userId = name + "@"+num;
     // Create a new user
     const newUser = await user.create({
       name,
