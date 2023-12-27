@@ -1,5 +1,5 @@
 const { user, Cards } = require("../models");
-const { compare } = require('bcrypt')
+const { hash, genSalt, compare } = require("bcrypt");
 const jwt = require("jsonwebtoken")
 
 const userSignIn = async (req, res) => {
@@ -22,30 +22,15 @@ const userSignIn = async (req, res) => {
 
 const userSignUp = async (req, res) => {
   try {
-    const {name,  mobile, email, password } = req.body;
-    
-    // Check if the user with the given mobile number already exists
-    const existingUser = await user.findOne({ where: { mobile } });
+    req.body.password = await hash(req.body.password, await genSalt(10));
+    await user.create(req.body);
 
-    if (existingUser) {
-      return res.status(500).send({ status: false, msg: "User already registered" });
-    }
-
-    const userId = name + "@123";
-    // Create a new user
-    const newUser = await user.create({
-      name,
-      mobile,
-      email,
-      password,
-      userId,
-      // Add other necessary fields here
-    });
-
-    return res.status(200).send({ status: true, msg: "User registered successfully", data: newUser });
+    return res
+      .status(200)
+      .send({ status: true, msg: "user signup successfully !!" });
   } catch (error) {
-    console.error(error);
-    return res.status(400).send({ status: false, msg: "User registration error: " + error.message });
+    console.log(error);
+    return res.status(400).send({ status: false, msg: "user signup error!! " });
   }
 }
 
